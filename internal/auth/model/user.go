@@ -5,11 +5,11 @@ type User struct {
 	Name      string
 	Email     string
 	Password  string
-	CreatedAt int
-	UpdatedAt int
+	CreatedAt int64
+	UpdatedAt int64
 }
 
-func NewUser(id, name, email, password string, createdAt, updatedAt int) (*User, error) {
+func NewUser(id, name, email, password string, createdAt, updatedAt int64) (*User, error) {
 	user := User{
 		Id:        id,
 		Name:      name,

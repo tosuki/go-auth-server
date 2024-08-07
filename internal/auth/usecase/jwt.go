@@ -7,8 +7,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var secretKey = []byte("dkaowpdkapwodk")
-
 func CreateLifetime(expirationTime time.Duration) (issuedAt, expiresAt int64) {
 	now := time.Now()
 
@@ -18,7 +16,7 @@ func CreateLifetime(expirationTime time.Duration) (issuedAt, expiresAt int64) {
 	return
 }
 
-func CreateToken(name, email string) (string, error) {
+func CreateToken(name, email, secretKey string) (string, error) {
 	issuedAt, expiresAt := CreateLifetime(72)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -28,7 +26,7 @@ func CreateToken(name, email string) (string, error) {
 		"expiresAt": expiresAt,
 	})
 
-	jwt, err := token.SignedString(secretKey)
+	jwt, err := token.SignedString([]byte(secretKey))
 
 	if err != nil {
 		return "", err
@@ -37,9 +35,9 @@ func CreateToken(name, email string) (string, error) {
 	return jwt, nil
 }
 
-func DecodeToken(tokenString string) (*model.Session, error) {
+func DecodeToken(tokenString, secretKey string) (*model.Session, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &model.Session{}, func(t *jwt.Token) (interface{}, error) {
-		return secretKey, nil
+		return []byte(secretKey), nil
 	})
 
 	if err != nil {
