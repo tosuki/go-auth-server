@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"auth-server/internal/auth/usecase"
+	"fmt"
+)
 
 func main() {
-    fmt.Println("hello world")
+	token, err := usecase.CreateToken("kdapowdk", "dkawdk@gmail.com")
+
+	if err != nil {
+		fmt.Println("Failed to create the token, here it is the error: ", err)
+	}
+
+	fmt.Println("token: ", token)
 }

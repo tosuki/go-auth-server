@@ -13,7 +13,7 @@ func NewSession(name, email string, issuedAt, expiresAt int) (*Session, error) {
         Name: name,
         Email: email,
         IssuedAt: issuedAt,
-        ExpiresAt: expiresAt
+        ExpiresAt: expiresAt,
     }
 
     return &session, nil
