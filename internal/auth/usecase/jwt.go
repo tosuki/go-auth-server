@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"auth-server/internal/auth/model"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -34,4 +35,22 @@ func CreateToken(name, email string) (string, error) {
 	}
 
 	return jwt, nil
+}
+
+func DecodeToken(tokenString string) (*model.Session, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &model.Session{}, func(t *jwt.Token) (interface{}, error) {
+		return secretKey, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var claims *model.Session = token.Claims.(*model.Session)
+
+	return claims, nil
+}
+
+func IsValidToken(session *model.Session) bool {
+	return session.ExpiresAt >= time.Now().Unix()
 }

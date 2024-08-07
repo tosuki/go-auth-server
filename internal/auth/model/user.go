@@ -10,15 +10,14 @@ type User struct {
 }
 
 func NewUser(id, name, email, password string, createdAt, updatedAt int) (*User, error) {
-    user := User{
-        Id: id,
-        Name: name,
-        Email: email,
-        Password: password,
-        CreatedAt: createdAt,
-        UpdatedAt: updatedAt,
-    }
+	user := User{
+		Id:        id,
+		Name:      name,
+		Email:     email,
+		Password:  password,
+		CreatedAt: createdAt,
+		UpdatedAt: updatedAt,
+	}
 
-    return &user, nil
+	return &user, nil
 }
-

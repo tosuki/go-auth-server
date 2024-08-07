@@ -1,21 +1,20 @@
 package model
 
 type Session struct {
-    Name string
-    Email string
+	Name  string
+	Email string
 
-    IssuedAt int
-    ExpiresAt int
+	IssuedAt  int64
+	ExpiresAt int64
 }
 
-func NewSession(name, email string, issuedAt, expiresAt int) (*Session, error) {
-    session := Session{
-        Name: name,
-        Email: email,
-        IssuedAt: issuedAt,
-        ExpiresAt: expiresAt,
-    }
+func NewSession(name, email string, issuedAt, expiresAt int64) (*Session, error) {
+	session := Session{
+		Name:      name,
+		Email:     email,
+		IssuedAt:  issuedAt,
+		ExpiresAt: expiresAt,
+	}
 
-    return &session, nil
+	return &session, nil
 }
-
