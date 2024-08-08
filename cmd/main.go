@@ -7,5 +7,5 @@ import (
 func main() {
 	godotenv.Load() //default load .env file
 
-	auth.RunServer()
+	RunServer()
 }
