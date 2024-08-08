@@ -3,6 +3,8 @@ package main
 import (
     "net/http"
     "github.com/gin-gonic/gin"
+    
+    "auth-server/cmd/auth"
 )
 
 func RunServer() {
@@ -14,6 +16,8 @@ func RunServer() {
             "message": "hello world",
         })
     })
+
+    auth.AddAuthRoutes(r.Group("/auth"))
 
     r.Run()
 }
