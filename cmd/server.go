@@ -1,23 +1,17 @@
 package main
 
 import (
-    "net/http"
-    "github.com/gin-gonic/gin"
-    
-    "auth-server/cmd/auth"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+
+	"auth-server/cmd/auth"
 )
 
 func RunServer() {
-    r := gin.Default()
+	r := gin.Default()
 
-    r.GET("/ok", func(context *gin.Context) {
-        context.JSON(http.StatusOK, gin.H{
-            "ok": true,
-            "message": "hello world",
-        })
-    })
+	r.Use(cors.Default())
+	auth.AddAuthRoutes(r.Group("/auth"))
 
-    auth.AddAuthRoutes(r.Group("/auth"))
-
-    r.Run()
+	r.Run()
 }
