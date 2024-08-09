@@ -1,8 +1,8 @@
 package usecase
 
 import (
+	"auth-server/internal/auth"
 	"auth-server/internal/auth/repo/users"
-	"fmt"
 	"os"
 
 	"golang.org/x/crypto/bcrypt"
@@ -11,7 +11,7 @@ import (
 var secretKey = os.Getenv("JWT_SECRET")
 
 func SignUp(repository users.UserRepository, name, email string, password []byte) (string, error) {
-    return "", nil
+	return "", nil
 }
 
 // string = jwt, error = if the request fails
@@ -19,19 +19,19 @@ func Authenticate(repository users.UserRepository, email string, password []byte
 	user, err := repository.GetByEmail(email)
 
 	if err != nil {
-		return "", fmt.Errorf("invalid-email")
+		return "", auth.ErrorInvalidEmail
 	}
 
 	isPasswordRight := bcrypt.CompareHashAndPassword([]byte(user.Password), password)
 
 	if isPasswordRight != nil {
-		return "", fmt.Errorf("invalid-password")
+		return "", auth.ErrorInvalidPassword
 	}
 
 	token, err := CreateToken(user.Name, user.Email, secretKey)
 
 	if err != nil {
-		return "", fmt.Errorf("token-err")
+		return "", auth.ErrorTokenCreationError
 	}
 
 	return token, nil
