@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AuthController struct {
+type AuthHttpController struct {
 	authUsecase *usecase.AuthUsecase
 }
 
@@ -27,7 +27,7 @@ func (requestBody *AuthenticateRequestBody) Validate() bool {
 	return requestBody.Email != "" && requestBody.Password != ""
 }
 
-func (controller *AuthController) Authenticate(context *gin.Context) {
+func (controller *AuthHttpController) Authenticate(context *gin.Context) {
 	var requestBody AuthenticateRequestBody
 
 	if err := context.BindJSON(&requestBody); err != nil && !requestBody.Validate() {
@@ -42,20 +42,20 @@ func (controller *AuthController) Authenticate(context *gin.Context) {
 
 	if authenticationError != nil {
 		switch {
-			case errors.Is(authenticationError, auth.ErrorInvalidEmail):
-			case errors.Is(authenticationError, auth.ErrorInvalidPassword):
-				context.JSON(http.StatusUnauthorized, gin.H{
-					"ok":      false,
-					"message": authenticationError.Error(),
-				})
-				return
-			default:
-				fmt.Printf("An unsupported error occurred: %s", authenticationError)
-				context.JSON(http.StatusInternalServerError, gin.H{
-					"ok":      false,
-					"message": "internal-server-error",
-				})
-				return
+		case errors.Is(authenticationError, auth.ErrorInvalidEmail):
+		case errors.Is(authenticationError, auth.ErrorInvalidPassword):
+			context.JSON(http.StatusUnauthorized, gin.H{
+				"ok":      false,
+				"message": authenticationError.Error(),
+			})
+			return
+		default:
+			fmt.Printf("An unsupported error occurred: %s", authenticationError)
+			context.JSON(http.StatusInternalServerError, gin.H{
+				"ok":      false,
+				"message": "internal-server-error",
+			})
+			return
 		}
 	}
 
