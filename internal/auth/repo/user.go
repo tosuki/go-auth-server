@@ -23,7 +23,7 @@ func (repository *FakeUserRepositoryImpl) Has(email string) bool {
 
 func (repository *FakeUserRepositoryImpl) Add(user *model.User) error {
 	if repository.Has(user.Email) {
-		return fmt.Errorf("unique signature error")
+		return fmt.Errorf("unique-signature-error")
 	}
 
 	repository.Adapter[user.Email] = *user
@@ -35,7 +35,7 @@ func (repository *FakeUserRepositoryImpl) GetByEmail(email string) (*model.User,
 	user, err := repository.Adapter[email]
 
 	if err {
-		return nil, fmt.Errorf("invalid email")
+		return nil, fmt.Errorf("invalid-email")
 	}
 
 	return &user, nil
