@@ -14,8 +14,12 @@ import (
 
 var secretKey = os.Getenv("JWT_SECRET")
 
-func SignUp(repository users.UserRepository, name, email string, password []byte) (string, error) {
-	_, queryErr := repository.GetByEmail(email)
+type AuthUsecase struct {
+	Repository users.UserRepository
+}
+
+func (usecase *AuthUsecase) SignUp(name, email string, password []byte) (string, error) {
+	_, queryErr := usecase.Repository.GetByEmail(email)
 
 	if !errors.Is(queryErr, auth.ErrorInvalidEmail) {
 		return "", auth.ErrorEmailTaken
@@ -39,7 +43,7 @@ func SignUp(repository users.UserRepository, name, email string, password []byte
 
 	now := time.Now().Unix()
 
-	repository.Add(model.NewUser(userUUID.String(), name, email, string(hashedPassword), now, now))
+	usecase.Repository.Add(model.NewUser(userUUID.String(), name, email, string(hashedPassword), now, now))
 
 	token, tokenErr := CreateToken(name, email, secretKey)
 
@@ -51,8 +55,8 @@ func SignUp(repository users.UserRepository, name, email string, password []byte
 }
 
 // string = jwt, error = if the request fails
-func Authenticate(repository users.UserRepository, email string, password []byte) (string, error) {
-	user, err := repository.GetByEmail(email)
+func (usecase *AuthUsecase) Authenticate(email string, password []byte) (string, error) {
+	user, err := usecase.Repository.GetByEmail(email)
 
 	if err != nil {
 		return "", auth.ErrorInvalidEmail
