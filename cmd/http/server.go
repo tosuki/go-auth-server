@@ -1,10 +1,10 @@
-package main
+package http
 
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
-	"auth-server/cmd/auth"
+	"auth-server/cmd/http/auth"
 )
 
 func RunServer() {
