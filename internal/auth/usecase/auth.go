@@ -1,18 +1,38 @@
 package usecase
 
 import (
-    "auth-server/internal/auth/model"
+	"auth-server/internal/auth/repo"
+	"fmt"
+	"os"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
-type AuthenticationResponse struct {
-    Err error
-    Data *model.Session
+var secretKey = os.Getenv("JWT_SECRET")
+
+func SignUp(repository repo.UserRepository, name, email string, password []byte) (string, error) {
+    return "", nil
 }
 
-func NewAuthenticationResponse() *AuthenticationResponse {
-    return nil
-}
+// string = jwt, error = if the request fails
+func Authenticate(repository repo.UserRepository, email string, password []byte) (string, error) {
+	user, err := repository.GetByEmail(email)
 
-func Authenticate(email, password string) (string, string) {
-    return email, password
+	if err != nil {
+		return "", fmt.Errorf("invalid-email")
+	}
+
+	isPasswordRight := bcrypt.CompareHashAndPassword([]byte(user.Password), password)
+
+	if isPasswordRight != nil {
+		return "", fmt.Errorf("invalid-password")
+	}
+
+	token, err := CreateToken(user.Name, user.Email, secretKey)
+
+	if err != nil {
+		return "", fmt.Errorf("token-err")
+	}
+
+	return token, nil
 }

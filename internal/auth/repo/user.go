@@ -1,44 +1,48 @@
 package repo
 
 import (
-    "auth-server/internal/auth/model"
-    "time"
+	"auth-server/internal/auth/model"
+	"fmt"
 )
 
 type UserRepository interface {
-	Save(user *model.User) (model.User, error)
+	Add(user *model.User) error
+	Has(email string) bool
 	GetByEmail(email string) (*model.User, error)
 }
 
-type UserRepositoryImpl struct {
+type FakeUserRepositoryImpl struct {
 	Adapter map[string]model.User
 }
 
-func NewUserRepository() *UserRepository {
-    return &UserRepositoryImpl{
-        Adapter: make(map[string]model.User)
-    }
+func (repository *FakeUserRepositoryImpl) Has(email string) bool {
+	_, err := repository.Adapter[email]
+
+	return !err
 }
 
-func (repository *UserRepositoryImpl) Has(email string) bool {
-    
+func (repository *FakeUserRepositoryImpl) Add(user *model.User) error {
+	if repository.Has(user.Email) {
+		return fmt.Errorf("unique signature error")
+	}
+
+	repository.Adapter[user.Email] = *user
+
+	return nil
 }
 
-func (repository *UserRepositoryImpl) Save(id, name, email, password string) (model.User, error) {
-    now := time.Now().Unix()
+func (repository *FakeUserRepositoryImpl) GetByEmail(email string) (*model.User, error) {
+	user, err := repository.Adapter[email]
 
-    user := model.User{
-        Id: id,
-        Email: email,
-        Password: password,
-        CreatedAt: now,
-    }
+	if err {
+		return nil, fmt.Errorf("invalid email")
+	}
 
-    repository.Adapter[email] = user
-
-    return nil, nil
+	return &user, nil
 }
 
-func (repository *UserRepositoryImpl) GetByEmail(email string) (*model.User, error) {
-    return nil, nil
+func NewUserRepository() UserRepository {
+	return &FakeUserRepositoryImpl{
+		Adapter: make(map[string]model.User),
+	}
 }
