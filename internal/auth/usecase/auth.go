@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"auth-server/internal/auth/repo"
+	"auth-server/internal/auth/repo/users"
 	"fmt"
 	"os"
 
@@ -10,12 +10,12 @@ import (
 
 var secretKey = os.Getenv("JWT_SECRET")
 
-func SignUp(repository repo.UserRepository, name, email string, password []byte) (string, error) {
+func SignUp(repository users.UserRepository, name, email string, password []byte) (string, error) {
     return "", nil
 }
 
 // string = jwt, error = if the request fails
-func Authenticate(repository repo.UserRepository, email string, password []byte) (string, error) {
+func Authenticate(repository users.UserRepository, email string, password []byte) (string, error) {
 	user, err := repository.GetByEmail(email)
 
 	if err != nil {
