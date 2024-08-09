@@ -13,6 +13,8 @@ type UserRepository interface {
 }
 
 func NewUserRepository(adapter *gorm.DB) UserRepository {
+	adapter.AutoMigrate(&model.User{})
+
 	return &PostgresUserRepositoryImpl{
 		Adapter: adapter,
 	}
