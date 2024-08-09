@@ -9,7 +9,7 @@ type User struct {
 	UpdatedAt int64
 }
 
-func NewUser(id, name, email, password string, createdAt, updatedAt int64) (*User, error) {
+func NewUser(id, name, email, password string, createdAt, updatedAt int64) *User {
 	user := User{
 		Id:        id,
 		Name:      name,
@@ -19,5 +19,5 @@ func NewUser(id, name, email, password string, createdAt, updatedAt int64) (*Use
 		UpdatedAt: updatedAt,
 	}
 
-	return &user, nil
+	return &user
 }
