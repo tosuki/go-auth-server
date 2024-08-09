@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	godotenv.Load() //default load .env file
+	godotenv.Load("../.env") //default load .env file
 
 	ConnectDatabase()
 	RunServer()
