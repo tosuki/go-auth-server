@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  database:
+    container_name: POSTGRES_GO_AUTH_DB
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=go_auth_db
+    ports:
+      - "5432:5432"
